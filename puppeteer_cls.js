@@ -93,7 +93,7 @@ async function getAllCLS(url, outDir, numRuns, chromePath) {
   let allScores = [];
   for (let i = 0; i < numRuns; i++) {
     console.log('Starting run ', i, ' for ', url);
-    let cls = await getCLS(url);
+    let cls = await getCLS(url, undefined, chromePath);
     allScores.push(cls);
   }
   console.log(url, allScores);
@@ -104,7 +104,7 @@ async function getAllCLS(url, outDir, numRuns, chromePath) {
 
 (async () => {
   const args = process.argv.slice(2);
-  const data = fs.readFileSync(args[4], 'utf8');
+  const data = fs.readFileSync(args[3], 'utf8');
   const urls = data.split(/\s/);
   const numRuns = args[0];
   const outDir = args[1];

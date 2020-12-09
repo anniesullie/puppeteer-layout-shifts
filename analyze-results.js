@@ -22,28 +22,34 @@ function median(vals) {
   return (vals[half - 1] + vals[half]) / 2.0;
 }
 
-const data = fs.readFileSync('./url_list.txt', 'utf8');
+const args = process.argv.slice(2);
+const data = fs.readFileSync(args[0], 'utf8');
 const urls = data.split(/\s/);
-let revisionDirs = [];
+let revisionDirs = process.argv.slice(4);
 let csvHeader = [
   {id: 'url', title: 'Url'}
 ]
-let beforeRev = null;
-fs.readdirSync('.').forEach(file => {
-  if (file.startsWith('r')) {
-    revisionDirs.push(file);
-    csvHeader.push({id: file, title: file});
-    if (beforeRev) {
-      csvHeader.push({id: beforeRev + file, title: beforeRev + ' to ' + file});
-      beforeRev = null;
-    } else {
-      beforeRev = file;
+// If no revision dirs specified, read from current dir
+if (revisionDirs.length == 0) {
+  fs.readdirSync('.').forEach(file => {
+    if (file.startsWith('r')) {
+      revisionDirs.push(file);
     }
+  });
+}
+let beforeRev = null;
+for (let revisionDir of revisionDirs) {
+  csvHeader.push({id: revisionDir, title: revisionDir});
+  if (beforeRev) {
+    csvHeader.push({id: beforeRev + revisionDir, title: beforeRev + ' to ' + revisionDir});
+    beforeRev = null;
+  } else {
+    beforeRev = revisionDir;
   }
-});
+}
 
 const csvWriter = createCsvWriter({
-  path: 'm86cls.csv',
+  path: args[1],
   header: csvHeader
 })
 

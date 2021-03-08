@@ -2,6 +2,7 @@
 // https://addyosmani.com/blog/puppeteer-recipes/
 
 const { trace } = require('console');
+const util = require('util');
 const fs = require('fs');
 const puppeteer = require('puppeteer-core');
 const {default: PQueue} = require('p-queue');
@@ -109,6 +110,9 @@ async function getAllCLS(url, outDir, numRuns, chromePath) {
   const numRuns = args[0];
   const outDir = args[1];
   const chromePath = args[2];
+
+  util.promisify(fs.mkdir)(outDir, { recursive: true });
+
   const queue = new PQueue({
     concurrency: 20
   });

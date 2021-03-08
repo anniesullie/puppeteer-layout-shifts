@@ -113,6 +113,7 @@ async function getAllCLS(url, outDir, numRuns, chromePath) {
     concurrency: 20
   });
   for (let url of urls) {
+    if (!url) continue;
     queue.add(async () => getAllCLS(url, outDir, numRuns, chromePath));
   }
 })();
